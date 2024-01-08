@@ -6,5 +6,7 @@ export default defineNuxtConfig({
     "@nuxt/image",
     "nuxt-swiper",
     "vuetify-nuxt-module",
+    "@vueuse/nuxt",
+    "nuxt3-leaflet",
   ],
 });

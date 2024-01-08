@@ -13,8 +13,11 @@
 
 *,
 *::after,
-*::before {
+*::before,
+html {
   font-family: "alibaba";
   direction: rtl;
+  scroll-behavior: smooth;
+  letter-spacing: 0;
 }
 </style>
