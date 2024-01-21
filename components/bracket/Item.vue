@@ -1,14 +1,16 @@
 <template>
   <div class="h-[17rem]" v-if="!isCarousel">
     <nuxt-link :to="'/plus/p-' + detail.short_id">
-      <nuxt-img
-        class="object-cover min-h-[120px] max-h-[120px] w-full"
+      <v-img
+        class="w-full"
+        min-height="120"
+        max-height="120"
+        transition="fade-transition"
+        cover
         :class="{ 'rounded-md': !isColored, 'rounded-t-md': isColored }"
         :src="imageUrl"
-        placeholder="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpkqLw-cqukI0a4Ertb21nkCwlR1yzar4_6A&usqp=CAU"
         :alt="detail.name"
-        :quality="30"
-        :loading="'lazy'"
+        lazy-src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpkqLw-cqukI0a4Ertb21nkCwlR1yzar4_6A&usqp=CAU"
       />
       <div class="flex flex-col gap-1 py-2">
         <div class="flex items-center justify-between text-sm px-1">
@@ -20,17 +22,27 @@
       </div>
     </nuxt-link>
   </div>
-  <div v-else class="min-h-[80px] max-h-[80px]">
+  <div
+    v-else
+    class="relative min-h-[80px] max-sm:max-h-[80px] sm:max-h-[200px] overlay-img"
+  >
     <nuxt-link :to="'p-' + detail.short_id">
-      <nuxt-img
+      <v-img
         :src="imageUrl"
-        placeholder="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpkqLw-cqukI0a4Ertb21nkCwlR1yzar4_6A&usqp=CAU"
+        lazy-src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpkqLw-cqukI0a4Ertb21nkCwlR1yzar4_6A&usqp=CAU"
         :alt="detail.name"
-        class="object-cover min-h-[60px] max-h-[60px] sm:w-[100px] w-[90px] rounded-md"
-        :quality="30"
-        loading="lazy"
+        cover
+        class="object-cover rounded-md"
+        :min-height="mobile ? 60 : 150"
+        :max-height="mobile ? 60 : 150"
+        transition="fade-transition"
       />
-      <span class="text-[0.5rem]">{{ detail.name }}</span>
+      <span class="text-[0.5rem] sm:hidden">{{ detail.name }}</span>
+      <div
+        class="absolute top-0 left-0 bg-slate-900 bg-opacity-65 w-full h-full rounded-md flex items-end p-2 overlay-text duration-300 max-sm:hidden"
+      >
+        <span class="text-xl font-bold text-white">{{ detail.name }}</span>
+      </div>
     </nuxt-link>
   </div>
 </template>
@@ -41,6 +53,8 @@ const { detail, type } = defineProps({
   isColored: Boolean,
   isCarousel: Boolean,
 });
+
+const { mobile } = useDisplay();
 
 const imageUrl = ref("");
 const img = detail.gallery.find((img) => img.is_cover) || detail.gallery[0];
@@ -54,4 +68,12 @@ const formattedContentText = computed(() => {
 });
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped>
+.overlay-text {
+  opacity: 0;
+}
+
+.overlay-img:hover .overlay-text {
+  opacity: 1;
+}
+</style>

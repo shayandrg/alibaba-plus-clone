@@ -1,18 +1,20 @@
 <template>
-  <div class="w-full px-4 mt-10 flex flex-col gap-3">
+  <div class="w-full px-4 mt-10 2xl:grid 2xl:grid-cols-2 gap-4">
     <div
       v-for="place in near.result.items"
       :key="place.id"
       class="flex items-center gap-4 min-h-[100px] max-h-[100px]"
     >
       <div class="w-fit h-full">
-        <nuxt-img
+        <v-img
           :src="place.gallery[0].large_url"
-          placeholder="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpkqLw-cqukI0a4Ertb21nkCwlR1yzar4_6A&usqp=CAU"
+          lazy-src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpkqLw-cqukI0a4Ertb21nkCwlR1yzar4_6A&usqp=CAU"
           :alt="place.name"
-          class="object-cover min-h-[100px] max-h-[100px] w-[100px] rounded-md"
-          :quality="30"
-          loading="lazy"
+          class="rounded-md"
+          cover
+          min-height="100"
+          max-height="100"
+          width="100"
         />
       </div>
       <div class="flex flex-col gap-3">

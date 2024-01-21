@@ -1,13 +1,18 @@
 <template>
-  <div class="w-full mt-5">
+  <div
+    class="max-2xl:w-full w-max mt-5 order-1"
+    :class="{ '2xl:sticky 2xl:top-28 ': isVisible }"
+  >
     <div class="flex items-start gap-1">
       <div class="">
         <p>
-          <span class="text-cyan-600 text-2xl font-semibold">{{ review }}</span>
+          <span class="text-cyan-600 text-2xl font-semibold">{{
+            +reviewsRatings.average.toFixed(1)
+          }}</span>
           <span class="text-cyan-600 font-semibold">/5</span>
         </p>
         <p class="text-[0.5rem] text-gray-500">
-          بر اساس نظر {{ reviews.result.totalCount }} نفر
+          بر اساس نظر {{ reviewsRatings.count }} نفر
         </p>
       </div>
       <v-rating
@@ -17,7 +22,7 @@
         active-color="blue"
         half-increments
         readonly
-        :model-value="review"
+        :model-value="+reviewsRatings.average.toFixed(1)"
         color="#17A2B8"
         density="compact"
       />
@@ -32,13 +37,13 @@
           active-color="blue"
           half-increments
           readonly
-          :model-value="ratingCounts[i].count"
+          :model-value="reviewsRatings.specifics[i]"
           color="#17A2B8"
           density="compact"
         />
         <span>{{ ratingCounts[i].text }}</span>
         <span class="mr-auto text-[0.55rem] text-gray-500"
-          >{{ ratingCounts[i].count }} نظر</span
+          >{{ reviewsRatings.specifics[i] }} نظر</span
         >
       </div>
     </div>
@@ -58,36 +63,27 @@
 
 <script setup>
 const { reviews } = defineProps({
-  review: Number,
-  reviews: Object,
+  reviewsRatings: Object,
+  isVisible: Boolean,
 });
 
 const ratingCounts = ref({
   1: {
-    count: 0,
     text: "خیلی بد",
   },
   2: {
-    count: 0,
     text: "بد",
   },
   3: {
-    count: 0,
     text: "متوسط",
   },
   4: {
-    count: 0,
     text: "خوب",
   },
   5: {
-    count: 0,
     text: "فوق‌العاده",
   },
 });
-
-for (let item of reviews.result.items) {
-  ratingCounts.value[item.rating].count++;
-}
 </script>
 
 <style lang="scss" scoped></style>
