@@ -17,6 +17,7 @@
           cover
           class="w-full"
           transition="fade-transition"
+          eager
         />
       </swiper-slide>
     </swiper>
@@ -24,7 +25,7 @@
 </template>
 
 <script setup>
-defineProps({
+const { items } = defineProps({
   items: Array,
 });
 </script>

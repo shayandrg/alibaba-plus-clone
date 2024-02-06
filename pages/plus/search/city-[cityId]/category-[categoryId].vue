@@ -1,6 +1,6 @@
 <template>
-  <nuxt-layout name="mobile">
-    <nuxt-layout name="detail">
+  <nuxt-layout :name="mobile ? 'mobile' : 'desktop'">
+    <nuxt-layout :name="mobile ? 'detail' : 'desktop-container'">
       <div class="px-4">
         <div class="">
           <detail-breadcrumb
@@ -12,8 +12,14 @@
           {{ categoryName + " " + "در" + " " + city.name }}
         </h1>
       </div>
-      <mobile-category-list :search="true" :items="category?.result?.items" />
-      <div class="flex flex-col gap-3 max-sm:w-11/12 mx-auto mt-10">
+      <mobile-category-list
+        :search="true"
+        :items="category?.result?.items"
+        :home="mobile ? false : true"
+      />
+      <div
+        class="flex flex-col gap-3 max-sm:w-11/12 mx-auto mt-10 md:grid md:grid-cols-2 md:gap-5 2xl:grid 2xl:grid-cols-4 2xl:gap-5"
+      >
         <bracket-item
           v-if="!allCategory"
           v-for="item in items?.result?.items"
@@ -51,6 +57,12 @@ const route = useRoute();
 const pageNumber = ref(1);
 const categoryName = ref("");
 
+const { width } = useWindowSize();
+
+const mobile = computed(() => {
+  return width.value < 600;
+});
+
 const { data: category, error: cateError } = await useAsyncData(
   "category",
   async () => {
@@ -62,8 +74,7 @@ const { data: category, error: cateError } = await useAsyncData(
       const cate = response.result.items.find(
         (item) => item.id === route.params.categoryId
       );
-
-      if (!cate) {
+      if (!cate || cate === undefined) {
         categoryName.value = "همه مکان‌ها";
       } else {
         categoryName.value = cate.name;
@@ -112,6 +123,10 @@ const { data: items, error: itemsError } = await useAsyncData(
 const { data: city, error: cityError } = await useFetch(
   `https://ws.alibaba.ir/api/v1/plus/user/cities/${route.params.cityId}/details`
 );
+
+useHead({
+  title: categoryName.value + " در " + city.value.name + " | علی‌بابا پلاس",
+});
 
 watch(route, (newVal, oldVal) => {
   if (newVal.params.categoryId !== oldVal.params.categoryId)
